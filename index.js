@@ -44,7 +44,6 @@ function generateProduct(_prosuct, _filter) {
 btns.forEach((item) => {
   item.addEventListener("click", (e) => {
     const filter = e.target.dataset.filter;
-    console.log(filter);
     filters.title = filter;
     generateProduct(allProduct, filters);
   });
