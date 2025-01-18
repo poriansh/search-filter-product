@@ -1,19 +1,22 @@
 const searchinput = document.querySelector("#search");
 const productsWerraper = document.querySelector(".products-werraper");
 const btns = document.querySelectorAll(".btn");
-// http://localhost:3000/
 let allProduct = [];
 const filters = {
   title: "",
 };
-document.addEventListener("DOMContentLoaded", () => {
-  axios
-    .get("http://localhost:3000/items")
-    .then((res) => {
-      allProduct = res.data;
-      generateProduct(allProduct, filters);
-    })
-    .catch((err) => console.log(err));
+const instance = axios.create({
+  baseURL: 'https://api.jsonbin.io/v3/b/678b9538acd3cb34a8ce5474',
+  headers: {'X-Master-Key': '$2a$10$ru99PfuQgeJlpnCprfrIpuy18ZNVDfz3/1XlOlo.i65Ol/TKEJwy.'}
+});
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    const response = await instance.get();
+    allProduct = response.data.record.items;
+    generateProduct(allProduct, filters);
+  }  catch (error) {
+    console.error("خطا در دریافت داده‌ها:", error);
+  }
 });
 searchinput.addEventListener("input", (e) => {
   filters.title = e.target.value;
@@ -21,7 +24,10 @@ searchinput.addEventListener("input", (e) => {
 });
 function generateProduct(_prosuct, _filter) {
   const filterProduct = _prosuct.filter((p) => {
-    return p.title.toLowerCase().trim().includes(_filter.title.toLowerCase().trim());
+    return p.title
+      .toLowerCase()
+      .trim()
+      .includes(_filter.title.toLowerCase().trim());
   });
   productsWerraper.innerHTML = "";
   filterProduct.forEach((item, index) => {
